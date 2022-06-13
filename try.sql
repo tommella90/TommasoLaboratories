@@ -1,0 +1,1 @@
+selec * from bank.account
