@@ -1,1 +1,0 @@
-selec * from bank.account
