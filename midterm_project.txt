@@ -1,0 +1,36 @@
+Name: 
+Tommaso Ramella
+
+Project: 
+Implicit Association Test: determinants of implicit discrimination
+
+Description
+The Implicit Association Test (IAT) (Harvard University) measures attitudes and beliefs 
+that people may be unwilling or unable to report', or, in other words, implicit attitudes 
+that people don't know to have. For example, people can report not to discriminate 
+against black or gay people, but 'automatic associations' could show that they actually do, 
+let's say, at an unconscious level. The IAT is meant to measure those automatic associations 
+on different fields, like gender, race, age, and others. It transform implicit discrimination
+into a time variable, showing the different time reaction in associating, let's say, 
+good - gay inputs vs bad - gay inputs (and, at the same time, good - straight vs bad - straight). 
+If people take more time to associate bad - gay inputs (and straights - bad ones) than 
+good - gay ones (and straigh - bad) the test will return a certain level of implicit 
+gender discrimination. 
+In this project I'll focus on gender discrimination, and how automatic association is 
+linked to sociodemographic information, explicit discrimination and others. 
+Every information is available at: 
+https://implicit.harvard.edu/implicit/education.html
+
+Data analysis and modeling 
+The target variable of the project is the overall IAT value. It's an already standardized
+variable showing the time associated with implicit gender discrimination. When people take 
+the test, they also need to fulfill some other information like age, education... and 
+their explicit discrimination (i.e. if they explicitly discriminate non-straight people). 
+Some of these variable will be used to predict the level of implicit discrimination. 
+A first process of data cleaning is required, since respondents are not obliged to 
+answer all the additional information. I will focus only on those records with full
+information available. 
+After the cleaning process, i will build a linear regression model to observe which are
+the best predictors of implicit discrimination.  
+
+
