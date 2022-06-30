@@ -7,7 +7,7 @@ import os
 import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
 import numpy as np
-#os.chdir("C:/Users/tomma/Documents/data_science/berlin/projects/data")
+os.chdir("C:/Users/tomma/Documents/data_science/berlin/projects/data")
 
 ###1) DATA CLEANING
 def CLEANING_DATA(df):
@@ -42,10 +42,10 @@ def CLEANING_DATA(df):
 
     df['gender_feel'] = find_mean(df[['tgayleswomen', 'tgaymen', 'tstraightmen', 'tstraightwomen']], 4)
     df['gender_preg'] = find_mean(df[['adoptchild', 'marriagerights_3num', 'relationslegal_3num',
-                                        'serverights', 'transgender', 'countrycit_num']], 6)
+                                      'serverights', 'transgender', 'countrycit_num']], 6)
 
 
-## categorical vars
+    ## categorical vars
     df_cat = df[['birthsex', 'genderidentity', 'sexuality_5', 'raceomb_002',
                  'contactfamily_num', 'contactfriend_num', 'side_straight_34',
                  'contactfriendly_num', 'contactmet_num']]
@@ -62,7 +62,7 @@ def CLEANING_DATA(df):
                   inplace=True, errors='raise')
 
 
-## numerical vars
+    ## numerical vars
     df_num = df[['_v1', 'birthyear', 'gender_preg', 'gender_feel', 'att_7', 'edu_14', 'politicalid_7', 'religionid']]
     df_num.rename(columns = {"_v1": "iat",
                              "birthyear": "y_birth",
@@ -72,7 +72,7 @@ def CLEANING_DATA(df):
                              }, inplace=True)
 
 
-## give names to categorical values
+    ## give names to categorical values
     df_cat = df_cat.astype('object')
     df_cat['gn_id'].replace({'[1]':'M', '[2]':'F', '[3]': 'Trans_M',
                              '[4]': 'Trans_F', '[5]': 'queer', '[6]': 'other' },
@@ -116,9 +116,9 @@ def CLEANING_DATA(df):
     df_final.drop(['met_gay'], axis = 1, inplace = True)
 
 
-## FURTHER CLEANING
+    ## FURTHER CLEANING
     df_clean = df_final.copy(deep = True)
-    
+
     ## 1) outliers
     def removeOutliers(df, col, low, high):
         p1 = low
@@ -136,7 +136,7 @@ def CLEANING_DATA(df):
     # to do
     df_clean.drop(['prefer_straight', 'friend_gay'], axis = 1, inplace = True)
 
-### RETURN FINAL DATASETS
+    ### RETURN FINAL DATASETS
     return df_final, df_clean
 
 
@@ -150,7 +150,7 @@ from sklearn.preprocessing import StandardScaler
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 
-    ## split and scale |the data
+## split and scale |the data
 def MODELING(df):
 
     def Standardization(Series):
@@ -196,19 +196,19 @@ def MODELING(df):
         table2 = table.iloc[1:,]
         return table2
 
-## prepare x and y TRAIN THE MODEL AND SEE STATISTICS
+    ## prepare x and y TRAIN THE MODEL AND SEE STATISTICS
     y = df['iat']
     x = df.drop(['iat'], axis = 1)
 
     y_tr, y_ts, x_tr_z, x_ts_z = SplitScaleData(y, x, .30, 8)
 
-## TEST ON TEST SAMPLE
+    ## TEST ON TEST SAMPLE
     ols = sm.OLS(y_tr, x_tr_z).fit()
     ols_table = LinearRegression(y_tr, x_tr_z)
     y_pred_tr = ols.predict(x_tr_z)
     y_pred_ts = ols.predict(x_ts_z)
 
-## GET RESULTS
+    ## GET RESULTS
     mean_tr, mean_ts = y_pred_tr.mean(), y_pred_ts.mean()
     std_tr, std_ts = y_pred_tr.std(), y_pred_ts.std()
     diff = y_pred_ts - y_ts.squeeze()
@@ -221,7 +221,7 @@ def MODELING(df):
 
     results = pd.DataFrame.from_dict(results, orient='index', columns=['values'])
 
-## PREDICTE VALUES
+    ## PREDICTE VALUES
     y_pred_ts.name = 'y_pred '
     df_pred = pd.merge(y_ts, y_pred_ts, right_index=True, left_index=True)
     df_pred.rename(columns={'iat': 'y_ts'}, inplace=True)
@@ -231,7 +231,7 @@ def MODELING(df):
 
 ## 3) PLOT FUNCTIONS
 def TableResults(ols_table):
-## format the ols table
+    ## format the ols table
     table = pd.DataFrame(ols_table.tables[1])
     list_col = ['ind_var', 'coef', 'std_err', 't_val', 'p_val', 'low_ci', 'high_ci']
     for num in range(0,len(table.columns)):
@@ -245,7 +245,7 @@ def TableResults(ols_table):
     table1 = table.applymap(str).applymap(float)
     return table1
 
-## 4) coefficients and confidence intervals
+## coefficients and confidence intervals
 def PlotOls(table):
     ## prepare the data
     n_coeff = len(table.index)
@@ -257,38 +257,56 @@ def PlotOls(table):
     l = range(0, n)
     labels = [0] * n
     names = table['variables']
-##plot
+    ##plot
     fig, ax = plt.subplots(figsize=(8, 5))
     plt.plot((lower,upper), (l, l), 'ro-', color='blue', linewidth=2, markersize=2)
     plt.scatter(x=table.coef, y=range(0,len(table)))
     ax.tick_params(axis='both', which='both')
     plt.yticks(range(0, n), names)
     plt.plot(labels, l, '--', color='red', linewidth=2, markersize=2)
-    ax.set_ylabel('Coefficients',fontsize=18)
+    ax.set_ylabel('Coefficients', fontsize=10)
     plt.scatter(lower, l, marker='|', color='blue')
     plt.scatter(upper, l, marker='|', color='blue')
     ax.set_facecolor('white')
     plt.title('Coefficients and 95% Confidence Intervals', fontsize=15)
+    plt.savefig("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/coefplot.jpeg",
+                bbox_inches='tight')
 
 
 #%% CLEAN DATA
 import plotly.express as px
 import plotly.io as pio
 import matplotlib.pyplot as plt
+import plotly.figure_factory as ff
 import seaborn as sns
 pio.renderers.default = "browser"
 
 df = pd.read_stata('iat_sex2020_clean.dta', convert_categoricals=False)
 df_raw, df_clean = CLEANING_DATA(df)
+
+
+#%% target variable distrib
+group_labels = ['iat']
+hist_target = [df_raw['iat'].to_numpy()]
+
+fig = ff.create_distplot(hist_target, ['IAT score'], bin_size=.05)
+fig.show()
+fig.update_layout(height=1000, width=1200, title_text="IAT DISTRIBUTION")
+fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/iat_distrib.jpeg")
+df_raw['iat'].describe().to_csv('C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/descr1.csv',
+                                index = True, encoding='utf-8')
+
+
+#%% CORR MATRIX
 corr_matrix = abs(df_raw.corr())
 
 for i in range(0, 22):
     corr_matrix.iloc[i, i:] = 0
 
 fig = px.imshow(corr_matrix, text_auto=False, color_continuous_scale='BuPu')
-fig.update_layout(height=800, width=800, title_text="CORRELATION MATRIX")
+fig.update_layout(height=600, width=600, title_text="CORRELATION MATRIX")
 fig.show()
-
+fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/heatmap.jpeg")
 
 
 #%% GET RESULTS
@@ -301,15 +319,32 @@ ols_table = TableResults(ols_table)
 PlotOls(ols_table)
 
 
+#%% ols plot - bar
+bar_table = ols_table[['coef', 'p_val']]
+bar_table['sign'] = bar_table['coef'] < 0
+bar_table['p_val'] = [0 if i<0.05 else 1 for i in bar_table['p_val']]
+bar_table['coef'] = abs(bar_table['coef'])
+bar_table.reset_index(inplace=True)
+bar_table.sort_values(by=['coef'], ascending = False, inplace=True)
+bar_table['ind_var'] = bar_table['ind_var'].astype(str)
+fig = px.bar(bar_table, x=bar_table['ind_var'], y=bar_table['coef'], color=bar_table['sign'])
+fig.update_layout(height=800, width=1000, title_text="COEFFICIENTS")
+fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/ols_coeff.jpeg")
+fig.show()
+bar_table
+
 #%% statistics
 import plotly.express as px
 import plotly.io as pio
 pio.renderers.default = "browser"
 
 plot = results.reset_index(drop=False)
+plot.to_csv('C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/ols_results.csv',
+            index = True, encoding='utf-8')
 plot['color'] = [0,0,1,1,2,2,3]
 fig = px.bar(plot, x=plot['index'], y=plot['values'], color=plot['color'])
-fig.update_layout(height=1000, width=1200, title_text="OLS STATISTICS")
+fig.update_layout(height=800, width=1000, title_text="OLS STATISTICS")
+fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/stats_test.jpeg")
 fig.show()
 
 
@@ -321,3 +356,13 @@ fig.update_traces(marker_size=3)
 fig.show()
 
 
+#%% gender prej. distrib
+group_labels = ['gender_preg']
+hist_target = [df_raw['gender_preg'].to_numpy()]
+
+fig = ff.create_distplot(hist_target, ['gender_preg'], bin_size=.05)
+fig.show()
+fig.update_layout(height=1000, width=1200, title_text="SEXUAL PREJUDICE")
+fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/gender_prej_distrib.jpeg")
+
+#%%
