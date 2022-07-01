@@ -353,6 +353,7 @@ import plotly.express as px
 fig = px.scatter(x=df_pred['y_ts'], y=df_pred.iloc[:,1], color=df_pred.iloc[:,1])
 fig.update_layout(height=1000, width=1000, title_text="Mean and Std. of: y test vs y pred")
 fig.update_traces(marker_size=3)
+fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/diff.jpeg")
 fig.show()
 
 
@@ -366,3 +367,14 @@ fig.update_layout(height=1000, width=1200, title_text="SEXUAL PREJUDICE")
 fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/MidTermProject/results/gender_prej_distrib.jpeg")
 
 #%%
+df_raw['friend_gay'].value_counts()
+df_raw['gn_id_non_binary'].value_counts()
+
+fig = px.bar(bar_table, x=df_raw['gn_id_non_binary'].value_counts().index, y=df_raw['gn_id_non_binary'].value_counts())
+fig = px.bar(bar_table, x=df_raw['friend_gay'].value_counts().index, y=df_raw['friend_gay'].value_counts())
+fig.show()
+fig.update_layout(height=1000, width=1200, title_text="SEXUAL PREJUDICE")
+
+
+#%%
+
