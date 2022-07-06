@@ -310,7 +310,7 @@ fig.write_image("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratorie
 
 
 #%% GET RESULTS
-results, diff, ols_table, df_pred = MODELING(df_raw)
+results, diff, ols_table, df_pred = MODELING(df_clean)
 print(results)
 
 
