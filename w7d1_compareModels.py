@@ -189,13 +189,13 @@ def CompareFilterModels(x,y):
 def PlotsModelComparison(table_res):
 
     titles = ['NO FILTERING', 'P VALUE SELECTION', 'RFE SELECTION']
+    list_color = ['r', 'r', 'g', 'g', 'orange', 'orange']
 
     names = list(table_res.index)[0:6]
     fig, ax = plt.subplots(1,3, figsize = (13,4))
     for i in range(0,3):
         plt.subplot(1,3,i+1)
         all_r2 = table_res.iloc[0:6,i]
-        list_color = ['r', 'r', 'g', 'g', 'orange', 'orange']
         plt.ylim(bottom=0.73, top=0.78)
         plt.xticks(rotation=45)
         plt.title(f"R2: {titles[i]}")
@@ -206,13 +206,13 @@ def PlotsModelComparison(table_res):
     for i in range(0,3):
         plt.subplot(1,3,i+1)
         all_mse2 = table_res.iloc[6:, i]
-        list_color = ['r', 'r', 'g', 'g', 'orange', 'orange']
         plt.ylim(bottom=19000, top=23000)
         plt.xticks(rotation=45)
         plt.title(f"MSE: {titles[i]}")
         plt.bar(names, all_mse2, color=list_color)
 
-
+436/
+465
 #%%
 df = pd.read_csv("C:/Users/tomma/Documents/data_science/berlin/TommasoLaboratories/data/labs/Data_Marketing_Customer_Analysis_Round3.csv")
 df = df.iloc[:, 1:]
@@ -239,8 +239,6 @@ x = df_cat.merge(df_num, left_index=True, right_index=True)
 table_res = CompareFilterModels(x, y)
 table_res
 PlotsModelComparison(table_res)
-
-
 
 
 #%%
